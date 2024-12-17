@@ -3,21 +3,15 @@ import Project from '../models/Project'
 import Task from '../models/Task'
 import mongoose from 'mongoose';
 export class TaskController {
-    static createTasks = async (req: Request, res: Response) => {
-        const { projectId } = req.params
-        const project = await Project.findById(projectId)
+    static createTasks = async (req: Request, res: Response): Promise<void> => {
 
-        /*  if (!project) {
-             const error = new Error('Proyecto no encontrado')
-             return res.status(404).json({ error: error.message })
-         } */
 
         try {
             const task = new Task(req.body)
-            task.project = project?.id
-            project?.tasks.push(task.id)
+            task.project = req.project?.id
+            req.project?.tasks.push(task.id)
             await task.save()
-            await project?.save()
+            await req.project?.save()
             res.send('Tarea Creada Correctamente')
         } catch (error) {
             console.log(error)
