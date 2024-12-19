@@ -4,9 +4,10 @@ import { ProjectController } from '../controllers/ProjectController'
 import { handleInputErrors } from '../middleware/validation'
 import { TaskController } from '../controllers/TaskController'
 import { validateProject } from '../middleware/project'
+import { taskExist } from '../middleware/task'
 
 const router = Router()
-
+router.param('projectId', validateProject)
 router.post('/',
     body('projectName').notEmpty().withMessage('El nombre del Proyecto es obligatorio'),
     body('clientName').notEmpty().withMessage('El nombre del Cliente es obligatorio'),
@@ -36,7 +37,7 @@ router.delete('/:id',
 
 
 //Routes for tasks
-router.param('projectId', validateProject)
+router.param('taskId', taskExist)
 router.post('/:projectId/tasks',
     body('name').notEmpty().withMessage('El nombre de la tarea es obligatorio'),
     body('description').notEmpty().withMessage('La Descripción de la tarea es obligatoria'),
@@ -49,25 +50,25 @@ router.get('/:projectId/tasks',
     TaskController.getProjectTasks
 )
 
-router.get('/:projectId/tasks/:id',
-    param('id').isMongoId().withMessage('ID no valido'),
+router.get('/:projectId/tasks/:taskId',
+    param('taskId').isMongoId().withMessage('ID no valido'),
     TaskController.getTaskById
 )
 
-router.put('/:projectId/tasks/:id',
-    param('id').isMongoId().withMessage('ID no valido'),
+router.put('/:projectId/tasks/:taskId',
+    param('taskId').isMongoId().withMessage('ID no valido'),
     body('name').notEmpty().withMessage('El nombre de la tarea es obligatorio'),
     body('description').notEmpty().withMessage('La Descripción de la tarea es obligatoria'),
     TaskController.updateTask
 )
-router.delete('/:projectId/tasks/:id',
+router.delete('/:projectId/tasks/:taskId',
     param('projectId').isMongoId().withMessage('ID no valido'),
     handleInputErrors,
     TaskController.deleteTask
 )
 
-router.post('/:projectId/tasks/:id/status',
-    param('id').isMongoId().withMessage('ID no valido'),
+router.post('/:projectId/tasks/:taskId/status',
+    param('taskId').isMongoId().withMessage('ID no valido'),
     body('status').notEmpty().withMessage('El estado es obligatorio'),
     handleInputErrors,
     TaskController.updateStatus

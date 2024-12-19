@@ -26,13 +26,8 @@ export class TaskController {
 
     static getTaskById = async (req: Request, res: Response): Promise<void> => {
         try {
-            const { id } = req.params
-            const task = await Task.findById(id)
-            if (!task) {
-                const error = new Error('Tarea no encontrada')
-                return res.status(404).json({ error: error.message })
-            }
-            res.json(task)
+
+            res.json(req.task)
 
         } catch (error) {
             res.status(500).json({ error: 'Hubo un Error' })
@@ -40,8 +35,8 @@ export class TaskController {
     }
     static updateTask = async (req: Request, res: Response): Promise<void> => {
         try {
-            const { id } = req.params
-            const task = await Task.findByIdAndUpdate(id, req.body)
+            const { taskId } = req.params
+            const task = await Task.findByIdAndUpdate(taskId, req.body)
             if (!task) {
                 const error = new Error('Tarea no encontrada')
                 return res.status(404).json({ error: error.message })
@@ -56,15 +51,10 @@ export class TaskController {
 
     static deleteTask = async (req: Request, res: Response): Promise<void> => {
         try {
-            const { id } = req.params
-            const task = await Task.findById(id, req.body)
-            if (!task) {
-                const error = new Error('Tarea no encontrada')
-                return res.status(404).json({ error: error.message })
-            }
-            req.project.tasks = req.project.tasks.filter(task => task.toString() !== id)
 
-            await Promise.allSettled([task.deleteOne(), req.project.save()])
+            req.project.tasks = req.project.tasks.filter(task => task.toString() !== req.task.id.toString())
+
+            await Promise.allSettled([req.task.deleteOne(), req.project.save()])
             res.send("Tarea eliminada correctamente")
 
         } catch (error) {
@@ -74,18 +64,10 @@ export class TaskController {
 
     static updateStatus = async (req: Request, res: Response): Promise<void> => {
         try {
-            const { id } = req.params
 
-            const task = await Task.findById(id)
-            if (!task) {
-                const error = new Error('Tarea no encontrada')
-                return res.status(404).json({ error: error.message })
-            }
             const { status } = req.body
-            task.status = status
-
-
-            await task.save()
+            req.task.status = status
+            await req.task.save()
             res.send("Tarea actualizada")
         } catch (error) {
             res.status(500).json({ error: 'Hubo un Error' })

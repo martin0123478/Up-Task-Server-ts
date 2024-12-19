@@ -12,6 +12,7 @@ export type TaskStatus = typeof taskStatus[keyof typeof taskStatus]
 export interface ITask extends Document {
     name: string
     description: string,
+    status: string,
     project: Types.ObjectId
 }
 
