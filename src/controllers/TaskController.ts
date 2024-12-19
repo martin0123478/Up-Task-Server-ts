@@ -46,6 +46,7 @@ export class TaskController {
                 const error = new Error('Tarea no encontrada')
                 return res.status(404).json({ error: error.message })
             }
+
             res.send("Tarea actualizada correctamente")
 
         } catch (error) {
@@ -70,4 +71,27 @@ export class TaskController {
             res.status(500).json({ error: 'Hubo un Error' })
         }
     }
+
+    static updateStatus = async (req: Request, res: Response): Promise<void> => {
+        try {
+            const { id } = req.params
+
+            const task = await Task.findById(id)
+            if (!task) {
+                const error = new Error('Tarea no encontrada')
+                return res.status(404).json({ error: error.message })
+            }
+            const { status } = req.body
+            task.status = status
+
+
+            await task.save()
+            res.send("Tarea actualizada")
+        } catch (error) {
+            res.status(500).json({ error: 'Hubo un Error' })
+        }
+    }
+
+
+
 }

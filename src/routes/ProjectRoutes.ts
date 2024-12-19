@@ -65,4 +65,11 @@ router.delete('/:projectId/tasks/:id',
     handleInputErrors,
     TaskController.deleteTask
 )
+
+router.post('/:projectId/tasks/:id/status',
+    param('id').isMongoId().withMessage('ID no valido'),
+    body('status').notEmpty().withMessage('El estado es obligatorio'),
+    handleInputErrors,
+    TaskController.updateStatus
+)
 export default router
