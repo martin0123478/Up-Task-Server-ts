@@ -15,7 +15,8 @@ export async function validateProject(req: Request, res: Response, next: NextFun
 
         if (!project) {
             const error = new Error('Proyecto no encontrado')
-            return res.status(404).json({ error: error.message })
+            res.status(404).json({ error: error.message })
+            return
         }
         req.project = project
         next()

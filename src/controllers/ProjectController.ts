@@ -29,7 +29,8 @@ export class ProjectController {
             const project = await Project.findById(id).populate('tasks')
             if (!project) {
                 const error = new Error('Proyecto no encontrado')
-                return res.status(404).json({ error: error.message })
+                res.status(404).json({ error: error.message })
+                return
             }
             res.json(project)
         } catch (error) {
@@ -44,7 +45,8 @@ export class ProjectController {
             const project = await Project.findByIdAndUpdate(id, req.body)
             if (!project) {
                 const error = new Error('Proyecto no encontrado')
-                return res.status(404).json({ error: error.message })
+                res.status(404).json({ error: error.message })
+                return
             }
             await project?.save()
             res.send('Proyecto actualizado')
@@ -60,7 +62,8 @@ export class ProjectController {
             const project = await Project.findById(id)
             if (!project) {
                 const error = new Error('Proyecto no encontrado')
-                return res.status(404).json({ error: error.message })
+                res.status(404).json({ error: error.message })
+                return
             }
             await project?.deleteOne()
             res.send('Proyecto eliminado')

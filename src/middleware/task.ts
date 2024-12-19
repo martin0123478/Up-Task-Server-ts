@@ -15,7 +15,8 @@ export async function taskExist(req: Request, res: Response, next: NextFunction)
 
         if (!task) {
             const error = new Error('tarea  to no encontrado')
-            return res.status(404).json({ error: error.message })
+            res.status(404).json({ error: error.message })
+            return
         }
         req.task = task
         next()

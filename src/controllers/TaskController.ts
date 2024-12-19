@@ -39,7 +39,8 @@ export class TaskController {
             const task = await Task.findByIdAndUpdate(taskId, req.body)
             if (!task) {
                 const error = new Error('Tarea no encontrada')
-                return res.status(404).json({ error: error.message })
+                res.status(404).json({ error: error.message })
+                return
             }
 
             res.send("Tarea actualizada correctamente")
