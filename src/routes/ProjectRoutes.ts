@@ -43,4 +43,9 @@ router.post('/:projectId/tasks',
     body('description').notEmpty().withMessage('La Descripción de la tarea es obligatoria'),
     handleInputErrors,
     TaskController.createTasks)
+
+router.get('/:projectId/tasks',
+    validateProject,
+    TaskController.getProjectTasks
+)
 export default router
